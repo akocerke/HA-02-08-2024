@@ -1,0 +1,15 @@
+---
+- name: Installiere Nginx auf EC2
+  hosts: webserver
+  become: yes
+  tasks:
+    - name: Nginx installieren
+      package:
+        name: nginx
+        state: present
+
+    - name: Nginx starten und aktivieren
+      service:
+        name: nginx
+        state: started
+        enabled: yes
