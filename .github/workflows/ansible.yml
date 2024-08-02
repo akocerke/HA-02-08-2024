@@ -1,7 +1,7 @@
 name: Deploy Nginx
 
 on:
-  workflow_dispatch:  # Ermöglicht manuelles Triggern des Workflows über GitHub UI
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -22,20 +22,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ansible
 
-      - name: Verify Files
-        run: |
-          ls -R  # Überprüfen der Verzeichnisstruktur
-
-      - name: Check playbook existence
-        run: |
-          if [ -f nginx-setup/ansible/playbook.yml ]; then
-            echo "Playbook exists."
-          else
-            echo "Playbook does not exist."
-          fi
-
       - name: Run Ansible playbook
         env:
           ANSIBLE_HOST_KEY_CHECKING: 'false'
         run: |
-          ansible-playbook nginx-setup/ansible/playbook.yml -i nginx-setup/ansible/inventory.ini --private-key ~/.ssh/ec2-key.pem
+          ansible-playbook nginx-setup/ansible/playbook.yml -i nginx-setup/ansible/inventory.ini --private-key ~/.ssh/ec2-key.pem -vvv
