@@ -13,6 +13,16 @@ Abgabe: Commit
 
 1.2 Anhand des angehängten Commits und mit Hilfe der Folien, wendet das nginx-playbook an 
 
+
+Theorie ist bissl anders wie die Praxis
+viel Zeit damit verbracht das zu insatllieren via ansible github action
+nix funzt
+
+local schon garnicht hinbekommen siehe screenshots
+
+💩
+
+
 # Zusatzufgabe 2: Ansible anwenden
 Abgabe: Commit
 
