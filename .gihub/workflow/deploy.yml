@@ -1,9 +1,7 @@
 name: Deploy Nginx
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:  # Ermöglicht manuelles Triggern des Workflows über GitHub UI
 
 jobs:
   deploy:
@@ -23,14 +21,6 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2-key.pem
           chmod 600 ~/.ssh/ec2-key.pem
-
-      - name: Setup AWS Credentials
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-        run: |
-          aws sts get-caller-identity
 
       - name: Run Ansible playbook
         env:
