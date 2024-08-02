@@ -1,9 +1,6 @@
 name: Deploy Nginx
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:  # Ermöglicht manuelles Triggern des Workflows über GitHub UI
 
 jobs:
@@ -20,10 +17,10 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2-key.pem
           chmod 600 ~/.ssh/ec2-key.pem
 
-      - name: Setup Ansible
-        uses: dawidd6/action-ansible@v2
-        with:
-          ansible-version: 2.12
+      - name: Install Ansible
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
 
       - name: Run Ansible playbook
         env:
