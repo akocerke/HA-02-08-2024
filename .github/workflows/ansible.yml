@@ -16,12 +16,16 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2-key.pem
           chmod 600 ~/.ssh/ec2-key.pem
-          echo -e "Host 18.192.42.36\n  IdentityFile ~/.ssh/ec2-key.pem\n  StrictHostKeyChecking no" >> ~/.ssh/config      
+          echo -e "Host 18.192.42.36\n  IdentityFile ~/.ssh/ec2-key.pem\n  StrictHostKeyChecking no" >> ~/.ssh/config
 
       - name: Install Ansible
         run: |
           sudo apt-get update
           sudo apt-get install -y ansible
+
+      - name: Test SSH Verbindung
+        run: |
+          ssh -i ~/.ssh/ec2-key.pem -o StrictHostKeyChecking=no ec2-user@18.192.42.36 echo "SSH Verbindung erfolgreich"
 
       - name: Run Ansible playbook
         env:
