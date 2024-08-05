@@ -10,12 +10,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+      
       - name: Setup SSH Key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2-key.pem
           chmod 600 ~/.ssh/ec2-key.pem
+          echo -e "Host 18.192.42.36\n  IdentityFile ~/.ssh/ec2-key.pem\n  StrictHostKeyChecking no" >> ~/.ssh/config      
 
       - name: Install Ansible
         run: |
