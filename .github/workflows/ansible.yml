@@ -10,21 +10,30 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup SSH Key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2-key.pem
           chmod 600 ~/.ssh/ec2-key.pem
-          echo -e "Host 18.192.42.36\n  IdentityFile ~/.ssh/ec2-key.pem\n  StrictHostKeyChecking no" >> ~/.ssh/config      
+          echo -e "Host 18.192.42.36\n  IdentityFile ~/.ssh/ec2-key.pem\n  StrictHostKeyChecking no" >> ~/.ssh/config
 
       - name: Install Ansible
         run: |
           sudo apt-get update
           sudo apt-get install -y ansible
 
+      - name: Test SSH Verbindung
+        run: |
+          ssh -i ~/.ssh/ec2-key.pem -o StrictHostKeyChecking=no ec2-user@18.192.42.36 echo "SSH Verbindung erfolgreich"
+
+      - name: Create Ansible Configuration File
+        run: |
+          mkdir -p nginx-setup/ansible
+          echo "[defaults]\ninventory = nginx-setup/ansible/inventory.ini\nremote_user = ec2-user\n\n[ssh_connection]\nssh_args = -o ForwardAgent=yes -o StrictHostKeyChecking=no -o ControlMaster=auto -o ControlPersist=60s\ncontrol_path = ~/.ansible/cp/ansible-ssh-%%h-%%p-%%r\npipelining = True" > nginx-setup/ansible/ansible.cfg
+
       - name: Run Ansible playbook
         env:
-          ANSIBLE_HOST_KEY_CHECKING: 'false'
+          ANSIBLE_CONFIG: nginx-setup/ansible/ansible.cfg
         run: |
-          ansible-playbook nginx-setup/ansible/playbook.yml -i nginx-setup/ansible/inventory.ini --private-key ~/.ssh/ec2-key.pem -vvv
+          ansible-playbook nginx-setup/ansible/playbook.yml --private-key ~/.ssh/ec2-key.pem -vvv
