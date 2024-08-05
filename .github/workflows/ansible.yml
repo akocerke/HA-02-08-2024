@@ -10,13 +10,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup SSH Key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2-key.pem
-          chmod 400 ~/.ssh/ec2-key.pem
-          echo -e "Host 18.192.42.36\n  IdentityFile ~/.ssh/ec2-key.pem\n  StrictHostKeyChecking no" >> ~/.ssh/config      
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/meine-ec2.pem
+          chmod 400 ~/.ssh/meine-ec2.pem
+          echo -e "Host *\n  IdentityFile ~/.ssh/meine-ec2.pem\n  StrictHostKeyChecking no" > ~/.ssh/config
 
       - name: Install Ansible
         run: |
@@ -27,4 +27,4 @@ jobs:
         env:
           ANSIBLE_HOST_KEY_CHECKING: 'false'
         run: |
-          ansible-playbook nginx-setup/ansible/playbook.yml -i nginx-setup/ansible/inventory.ini --private-key ~/.ssh/ec2-key.pem -vvv
+          ansible-playbook nginx-setup/ansible/playbook.yml -i nginx-setup/ansible/inventory.ini --private-key ~/.ssh/meine-ec2.pem -vvv
