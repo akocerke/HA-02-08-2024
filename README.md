@@ -11,6 +11,10 @@ Abgabe: Commit
 ![ssh keine vernindung](image-2.png)
 
 
+✅✅✅✅✅works
+![nginx](image-3.png)
+
+
 # 1.2 Anhand des angehängten Commits und mit Hilfe der Folien, wendet das nginx-playbook an 
 
 
